@@ -1,4 +1,4 @@
-# py_news_mobile
+# NPY - Mobile
 
 A new Flutter project.
 
