@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+
 
 void main() => runApp(MyApp());
 
@@ -45,6 +47,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+  String _contenido = '';
 
   void _incrementCounter() {
     setState(() {
@@ -55,6 +58,14 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+
+  }
+
+
+  void _setContenido(String nuevo){
+      setState(() {
+        _contenido = nuevo;
+      });
   }
 
   @override
@@ -94,10 +105,58 @@ class _MyHomePageState extends State<MyHomePage> {
             Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
+            Text('$_counter', style: Theme.of(context).textTheme.headline4),
+            Text('$_contenido', style: Theme.of(context).textTheme.headline5),
+            Container(
+                decoration:
+                    new BoxDecoration(color: Color.fromARGB(255, 255, 100, 10)),
+                child: ButtonBar(children: <Widget>[
+                  FlatButton(
+                      onPressed: () async {
+                        String url = 'https://jsonplaceholder.typicode.com/albums/$_counter';
+                        debugPrint(url);
+                        final response = await http.get(url);
+                         if (response.statusCode == 200) {
+                           debugPrint(response.body.toString());
+                           _setContenido(response.body);
+                         } else {
+                           throw Exception('Failed to load album');
+                         }
+                      },
+                      child: Text('Olis'),
+                      color: Color.fromARGB(255, 0, 255, 0)),
+                  OutlineButton(
+                      onPressed: () {
+                        return showDialog<void>(
+                          context: context,
+                          barrierDismissible: false, // user must tap button!
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Rewind and remember'),
+                              content: SingleChildScrollView(
+                                child: ListBody(
+                                  children: <Widget>[
+                                    Text('You will never be satisfied.'),
+                                    Text(
+                                        'You\’re like me. I’m never satisfied.'),
+                                  ],
+                                ),
+                              ),
+                              actions: <Widget>[
+                                FlatButton(
+                                  child: Text('Regret'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        ); /*  */
+                      },
+                      child: Text('Olis'),
+                      color: Color.fromARGB(255, 0, 0, 255)),
+                ])),
           ],
         ),
       ),
