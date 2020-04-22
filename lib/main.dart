@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,9 +44,30 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage>
+    with SingleTickerProviderStateMixin {
   int _counter = 0;
   String _contenido = '';
+
+  //Animaciones
+  Animation<double> animation;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _counter = 1;
+    controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    animation = Tween<double>(begin: 0, end: 100).animate(controller)
+      ..addListener(() {
+        setState(() {
+          // Cambio el estado
+        });
+      });
+
+    controller.forward();
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -58,14 +78,12 @@ class _MyHomePageState extends State<MyHomePage> {
       // called again, and so nothing would appear to happen.
       _counter++;
     });
-
   }
 
-
-  void _setContenido(String nuevo){
-      setState(() {
-        _contenido = nuevo;
-      });
+  void _setContenido(String nuevo) {
+    setState(() {
+      _contenido = nuevo;
+    });
   }
 
   @override
@@ -113,15 +131,16 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: ButtonBar(children: <Widget>[
                   FlatButton(
                       onPressed: () async {
-                        String url = 'https://jsonplaceholder.typicode.com/albums/$_counter';
+                        String url =
+                            'https://jsonplaceholder.typicode.com/albums/$_counter';
                         debugPrint(url);
                         final response = await http.get(url);
-                         if (response.statusCode == 200) {
-                           debugPrint(response.body.toString());
-                           _setContenido(response.body);
-                         } else {
-                           throw Exception('Failed to load album');
-                         }
+                        if (response.statusCode == 200) {
+                          debugPrint(response.body.toString());
+                          _setContenido(response.body);
+                        } else {
+                          throw Exception('Failed to load album');
+                        }
                       },
                       child: Text('Olis'),
                       color: Color.fromARGB(255, 0, 255, 0)),
@@ -157,6 +176,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Text('Olis'),
                       color: Color.fromARGB(255, 0, 0, 255)),
                 ])),
+            Container(
+              margin: EdgeInsets.symmetric(vertical: 10),
+              height: animation.value,
+              width: animation.value,
+              child: FlutterLogo(),
+            ),
           ],
         ),
       ),
@@ -166,5 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 }
