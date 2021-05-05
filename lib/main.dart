@@ -211,15 +211,38 @@ class FirstScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('First Scree'),
+        title: Text('First Screen - !'),
       ),
-      body: Center(
-          child: ElevatedButton(
-        child: Text('Screeam for me'),
-        onPressed: () {
-          // Go back
-          Navigator.pop(context);
-        },
+      body: Container(
+          child: Column(
+        children: [
+          Row(
+            children: [
+              FittedBox(
+                child: Image.asset(
+                  'images/placeholder.jpg',
+                  width: MediaQuery.of(context).size.width,
+                ),
+                fit: BoxFit.fill,
+              ),
+            ],
+          ),
+          Container(
+            child: Text(
+              'Titulo de Noticia - Este titulo es bastante largo veamos que tal se ve esta verga',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+            ),
+            margin: const EdgeInsets.all(12.0),
+          ),
+          Container(
+            child: Text(
+              'Esto es un texto multilinea. Donde se supone que esto se va a renderear de otra forma. Nunca sabermos si esto funca o no.\n\nO si es alguna cosa rara del puto dart.\n\nEn otras noticias....',
+              textAlign: TextAlign.justify,
+            ),
+            margin: const EdgeInsets.all(12.0),
+          ),
+        ],
       )),
     );
   }
