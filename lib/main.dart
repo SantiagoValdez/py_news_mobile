@@ -21,7 +21,11 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'ParaguayNews'),
+      initialRoute: '/',
+      routes: {
+        '/otro': (context) => FirstScreen(),
+      },
     );
   }
 }
@@ -78,6 +82,8 @@ class _MyHomePageState extends State<MyHomePage>
       // called again, and so nothing would appear to happen.
       _counter++;
     });
+
+    Navigator.pushNamed(context, '/otro');
   }
 
   void _setContenido(String nuevo) {
@@ -197,5 +203,24 @@ class _MyHomePageState extends State<MyHomePage>
   void dispose() {
     controller.dispose();
     super.dispose();
+  }
+}
+
+class FirstScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Scree'),
+      ),
+      body: Center(
+          child: ElevatedButton(
+        child: Text('Screeam for me'),
+        onPressed: () {
+          // Go back
+          Navigator.pop(context);
+        },
+      )),
+    );
   }
 }
